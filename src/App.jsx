@@ -1,144 +1,138 @@
 import React from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import EventsPage from './pages/EventsPage';
+import MyEventsPage from './pages/MyEventsPage';
+import ProtectedRoute from './components/ProtectedRoute';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser, selectIsAuthenticated } from './redux/authSlice';
+import { ArrowRight, Sparkles, ShieldCheck, Calendar, Users } from 'lucide-react';
+
+function HomePage() {
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const currentUser = useSelector(selectCurrentUser);
+
+  return (
+    <div className="home-page">
+      {/* Hero Section */}
+      <section className="hero-section">
+        <div className="container hero-container">
+          <div className="hero-badge">
+            <Sparkles size={16} />
+            <span>Web Programming Assignment 2</span>
+          </div>
+
+          <h1 className="hero-title">
+            Discover, Register & Manage <span className="gradient-text">Live Events</span>
+          </h1>
+
+          <p className="hero-subtitle">
+            An end-to-end Event Management System built with React, Redux Toolkit, React Router, and the Ticketmaster Discovery API.
+          </p>
+
+          <div className="hero-actions">
+            <Link to="/events" className="btn btn-primary btn-lg">
+              <span>Explore All Events</span>
+              <ArrowRight size={18} />
+            </Link>
+
+            {isAuthenticated ? (
+              <Link to="/my-events" className="btn btn-outline btn-lg">
+                <span>View My Registered Events</span>
+              </Link>
+            ) : (
+              <Link to="/login" className="btn btn-outline btn-lg">
+                <span>Log In / Register</span>
+              </Link>
+            )}
+          </div>
+
+          {/* Current Session Indicator */}
+          <div className="session-card card">
+            <div className="session-status">
+              <span className={`status-dot ${isAuthenticated ? 'online' : 'offline'}`}></span>
+              <span className="status-label">
+                Authentication Status: <strong>{isAuthenticated ? 'Logged In' : 'Guest / Logged Out'}</strong>
+              </span>
+            </div>
+
+            {isAuthenticated ? (
+              <p className="session-details">
+                Active user: <strong>{currentUser?.name}</strong> ({currentUser?.email})
+              </p>
+            ) : (
+              <p className="session-details">
+                Try logging in with the demo student account (<code>student@example.com</code> / <code>password123</code>) or register a new one.
+              </p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Feature Highlights Section */}
+      <section className="features-section">
+        <div className="container">
+          <div className="features-grid">
+            <div className="feature-card card">
+              <div className="feature-icon bg-indigo">
+                <ShieldCheck size={24} />
+              </div>
+              <h3>Redux Authentication</h3>
+              <p>Simulated user registration, login, logout, and session state persistence via LocalStorage.</p>
+            </div>
+
+            <div className="feature-card card">
+              <div className="feature-icon bg-cyan">
+                <Calendar size={24} />
+              </div>
+              <h3>Ticketmaster API</h3>
+              <p>Search, filter, and view real-time concerts, sports, theater, and arts events across venues.</p>
+            </div>
+
+            <div className="feature-card card">
+              <div className="feature-icon bg-amber">
+                <Users size={24} />
+              </div>
+              <h3>Event Registration</h3>
+              <p>Reserve spots, prevent duplicate bookings, and manage your upcoming vs completed events.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
 
 function App() {
   return (
-    <div className="app-container" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Navigation Header */}
-      <header style={{
-        backgroundColor: '#ffffff',
-        borderBottom: '1px solid var(--border)',
-        padding: '1rem 0',
-        position: 'sticky',
-        top: 0,
-        zIndex: 50
-      }}>
-        <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <span style={{ fontSize: '1.75rem' }}>🎟️</span>
-            <div>
-              <h1 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.2 }}>
-                EventHub
-              </h1>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Event Management System</span>
-            </div>
-          </div>
+    <div className="app-layout">
+      <Navbar />
 
-          <nav style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: 500 }}>
-              Initial Project Setup
-            </span>
-            <span className="badge badge-primary">v0.1.0</span>
-          </nav>
-        </div>
-      </header>
-
-      {/* Main Content Area */}
-      <main style={{ flex: 1, padding: '3rem 0' }}>
-        <div className="container" style={{ maxWidth: '900px' }}>
-          {/* Welcome Banner */}
-          <div className="card" style={{ padding: '2.5rem', textAlign: 'center', marginBottom: '2rem' }}>
-            <div style={{
-              display: 'inline-flex',
-              padding: '1rem',
-              borderRadius: '50%',
-              backgroundColor: 'var(--primary-light)',
-              marginBottom: '1rem'
-            }}>
-              <span style={{ fontSize: '2.5rem' }}>🚀</span>
-            </div>
-            
-            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.75rem' }}>
-              Web Programming — Assignment 2
-            </h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', maxWidth: '600px', margin: '0 auto 1.5rem auto' }}>
-              Event Management System developed with React, Redux Toolkit, React Router, and Ticketmaster Discovery API.
-            </p>
-
-            <div style={{
-              display: 'inline-block',
-              backgroundColor: '#f1f5f9',
-              padding: '0.5rem 1rem',
-              borderRadius: 'var(--radius-md)',
-              fontSize: '0.875rem',
-              fontFamily: 'monospace',
-              color: '#334155'
-            }}>
-              Milestone 1: Initial React project setup
-            </div>
-          </div>
-
-          {/* Setup Verification Checklist */}
-          <div className="card" style={{ padding: '2rem', marginBottom: '2rem' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '1.25rem' }}>
-              📦 Initial Setup Checklist
-            </h3>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
-              <div style={{ padding: '1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', backgroundColor: '#fafafa' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                  <span style={{ color: 'var(--success)', fontWeight: 'bold' }}>✓</span>
-                  <strong>React.js & Vite</strong>
-                </div>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Fast development build tool and component architecture configured.</p>
-              </div>
-
-              <div style={{ padding: '1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', backgroundColor: '#fafafa' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                  <span style={{ color: 'var(--success)', fontWeight: 'bold' }}>✓</span>
-                  <strong>Redux Toolkit & React-Redux</strong>
-                </div>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Installed for state management (auth, events, registrations).</p>
-              </div>
-
-              <div style={{ padding: '1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', backgroundColor: '#fafafa' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                  <span style={{ color: 'var(--success)', fontWeight: 'bold' }}>✓</span>
-                  <strong>React Router</strong>
-                </div>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Installed for multi-page routing and navigation.</p>
-              </div>
-
-              <div style={{ padding: '1rem', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', backgroundColor: '#fafafa' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                  <span style={{ color: 'var(--success)', fontWeight: 'bold' }}>✓</span>
-                  <strong>Git & Security (.gitignore)</strong>
-                </div>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Configured to protect API keys and node_modules before commits.</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Roadmap for Next Steps */}
-          <div className="card" style={{ padding: '2rem' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '1rem' }}>
-              🎯 Upcoming Implementation Steps
-            </h3>
-            <ol style={{ paddingLeft: '1.25rem', color: 'var(--text-muted)', lineHeight: '1.8', fontSize: '0.95rem' }}>
-              <li><strong>Step 2:</strong> Add authentication pages (Login & Register forms with input validation).</li>
-              <li><strong>Step 3:</strong> Implement Redux authentication with localStorage persistence & session state.</li>
-              <li><strong>Step 4:</strong> Add Ticketmaster API integration service & environment configuration.</li>
-              <li><strong>Step 5:</strong> Add event listing & categories with responsive cards.</li>
-              <li><strong>Step 6:</strong> Implement event search and filtering.</li>
-              <li><strong>Step 7:</strong> Implement Event Details page with full venue & timing info.</li>
-              <li><strong>Step 8:</strong> Implement Event Registration & My Events (with upcoming/completed filters and cancellation).</li>
-              <li><strong>Step 9:</strong> Add Protected Routes & final UI polish.</li>
-            </ol>
-          </div>
-        </div>
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/events" element={<EventsPage />} />
+          <Route
+            path="/my-events"
+            element={
+              <ProtectedRoute>
+                <MyEventsPage />
+              </ProtectedRoute>
+            }
+          />
+          {/* Fallback route */}
+          <Route path="*" element={<HomePage />} />
+        </Routes>
       </main>
 
-      {/* Footer */}
-      <footer style={{
-        backgroundColor: '#ffffff',
-        borderTop: '1px solid var(--border)',
-        padding: '1.5rem 0',
-        marginTop: 'auto',
-        textAlign: 'center',
-        color: 'var(--text-muted)',
-        fontSize: '0.875rem'
-      }}>
-        <div className="container">
-          <p>EventHub — Web Programming Assignment 2</p>
+      <footer className="footer">
+        <div className="container footer-container">
+          <p>© 2026 EventHub — Web Programming Assignment 2</p>
+          <p className="text-muted">Instructor: Mahhek Tahir</p>
         </div>
       </footer>
     </div>
