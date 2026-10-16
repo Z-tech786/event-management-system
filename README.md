@@ -51,3 +51,71 @@
 └── vite.config.js          # Vite configuration
 ```
 
+---
+
+## 🚀 Setup & Execution Instructions
+
+### 1. Prerequisites
+Ensure you have the following installed on your machine:
+- [Node.js](https://nodejs.org/) (v18 or higher recommended)
+- [npm](https://www.npmjs.com/) (installed automatically with Node)
+- [Git](https://git-scm.com/)
+
+### 2. Installation
+Open your terminal inside the project directory and install the dependencies:
+
+```bash
+npm install
+```
+
+### 3. Environment Configuration
+To use the live Ticketmaster Discovery API:
+1. Register for a free developer account at [Ticketmaster Developer Portal](https://developer.ticketmaster.com/).
+2. Create an App in your developer dashboard to get your **Consumer Key (API Key)**.
+3. Duplicate `.env.example` and rename it to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+4. Add your API key in `.env`:
+   ```env
+   VITE_TICKETMASTER_API_KEY=your_actual_ticketmaster_api_key
+   ```
+> ⚠️ **Note:** `.env` is listed in `.gitignore` to avoid exposing API keys on GitHub as required by the assignment guidelines.
+
+### 4. Running the Development Server
+Start the local Vite development server:
+
+```bash
+npm run dev
+```
+
+The application will be accessible at: `http://localhost:3000` (or `http://localhost:5173`).
+
+### 5. Building for Production
+To create an optimized production build:
+
+```bash
+npm run build
+```
+
+To preview the production build locally:
+
+```bash
+npm run preview
+```
+
+---
+
+##  Git Commit Guidelines (Assignment Roadmap)
+
+Following the course recommendations, commits should reflect clear iterative development:
+1. `Initial React project setup` *(Current Step)*
+2. `Add authentication pages`
+3. `Implement Redux authentication`
+4. `Add Ticketmaster API integration`
+5. `Add event listing`
+6. `Implement event search`
+7. `Add event registration`
+8. `Add My Events`
+9. `Add protected routes`
+10. `Improve responsive UI`
