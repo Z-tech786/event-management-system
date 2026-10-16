@@ -106,39 +106,3 @@ function HomePage() {
   );
 }
 
-function App() {
-  return (
-    <div className="app-layout">
-      <Navbar />
-
-      <main className="main-content">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/events" element={<EventsPage />} />
-          <Route path="/events/:id" element={<EventDetailPage />} />
-          <Route
-            path="/my-events"
-            element={
-              <ProtectedRoute>
-                <MyEventsPage />
-              </ProtectedRoute>
-            }
-          />
-          {/* Fallback route */}
-          <Route path="*" element={<HomePage />} />
-        </Routes>
-      </main>
-
-      <footer className="footer">
-        <div className="container footer-container">
-          <p>© 2026 EventHub — Web Programming Assignment 2</p>
-          <p className="text-muted">Instructor: Mahhek Tahir</p>
-        </div>
-      </footer>
-    </div>
-  );
-}
-
-export default App;
