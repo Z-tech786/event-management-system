@@ -135,6 +135,79 @@ function RegisterPage() {
             {clientErrors.name && <span className="error-text">{clientErrors.name}</span>}
           </div>
 
+          {/* Email Address */}
+          <div className="form-group">
+            <label htmlFor="email">Email Address</label>
+            <div className="input-wrapper">
+              <Mail size={18} className="input-icon" />
+              <input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="alex@example.com"
+                value={formData.email}
+                onChange={handleChange}
+                className={clientErrors.email ? 'input-error' : ''}
+              />
+            </div>
+            {clientErrors.email && <span className="error-text">{clientErrors.email}</span>}
+          </div>
+
+          {/* Password */}
+          <div className="form-group">
+            <label htmlFor="password">Password (min 6 characters)</label>
+            <div className="input-wrapper">
+              <Lock size={18} className="input-icon" />
+              <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={handleChange}
+                className={clientErrors.password ? 'input-error' : ''}
+              />
+            </div>
+            {clientErrors.password && <span className="error-text">{clientErrors.password}</span>}
+          </div>
+
+          {/* Confirm Password */}
+          <div className="form-group">
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <div className="input-wrapper">
+              <Lock size={18} className="input-icon" />
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                placeholder="••••••••"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className={clientErrors.confirmPassword ? 'input-error' : ''}
+              />
+            </div>
+            {clientErrors.confirmPassword && (
+              <span className="error-text">{clientErrors.confirmPassword}</span>
+            )}
+          </div>
+
+          {/* Submit Button */}
+          <button type="submit" className="btn btn-primary btn-block">
+            Register Account
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          <p>
+            Already have an account?{' '}
+            <Link to="/login" className="auth-link">
+              Log in here
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default RegisterPage;
