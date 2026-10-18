@@ -108,14 +108,4 @@ npm run preview
 
 ##  Git Commit Guidelines (Assignment Roadmap)
 
-Following the course recommendations, commits should reflect clear iterative development:
-1. `Initial React project setup` *(Current Step)*
-2. `Add authentication pages`
-3. `Implement Redux authentication`
-4. `Add Ticketmaster API integration`
-5. `Add event listing`
-6. `Implement event search`
-7. `Add event registration`
-8. `Add My Events`
-9. `Add protected routes`
-10. `Improve responsive UI`
+
