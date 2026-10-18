@@ -234,4 +234,179 @@ export const MOCK_EVENTS = [
         genre: { name: 'Soccer' }
       }
     ],
-   
+    priceRanges: [
+      {
+        type: 'standard',
+        currency: 'GBP',
+        min: 60,
+        max: 240
+      }
+    ],
+    _embedded: {
+      venues: [
+        {
+          name: 'Emirates Stadium',
+          city: { name: 'London' },
+          state: { name: 'Greater London' },
+          country: { name: 'United Kingdom' },
+          address: { line1: 'Hornsey Rd' }
+        }
+      ]
+    },
+    info: 'An electrifying title showdown in the English Premier League between two powerhouse football clubs.'
+  },
+  {
+    id: 'mock-evt-6',
+    name: 'International Animation & Film Festival 2026',
+    type: 'event',
+    url: 'https://www.ticketmaster.com',
+    locale: 'en-us',
+    images: [
+      {
+        ratio: '16_9',
+        url: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1200&q=80',
+        width: 1200,
+        height: 675
+      }
+    ],
+    dates: {
+      start: {
+        localDate: '2026-12-20',
+        localTime: '18:00:00'
+      },
+      status: {
+        code: 'onsale'
+      }
+    },
+    classifications: [
+      {
+        segment: { name: 'Film' },
+        genre: { name: 'Festival' }
+      }
+    ],
+    priceRanges: [
+      {
+        type: 'standard',
+        currency: 'USD',
+        min: 35,
+        max: 120
+      }
+    ],
+    _embedded: {
+      venues: [
+        {
+          name: 'TCL Chinese Theatre',
+          city: { name: 'Hollywood' },
+          state: { name: 'CA' },
+          country: { name: 'United States' },
+          address: { line1: '6925 Hollywood Blvd' }
+        }
+      ]
+    },
+    info: 'Premiering groundbreaking animation, independent shorts, and virtual reality cinema from visionary creators worldwide.'
+  }
+];
+
+/**
+ * Fetch events from Ticketmaster Discovery API
+ * Supports search keyword, classification/category, and page size.
+ */
+export async function searchTicketmasterEvents({
+  keyword = '',
+  classificationName = '',
+  size = 20,
+  sort = 'date,asc'
+} = {}) {
+  // If no API key is set in .env, seamlessly return filtered mock events with notice
+  if (!API_KEY || API_KEY.trim() === '' || API_KEY === 'your_ticketmaster_api_key_here') {
+    let filtered = [...MOCK_EVENTS];
+
+    if (keyword && keyword.trim()) {
+      const q = keyword.toLowerCase();
+      filtered = filtered.filter(
+        (evt) =>
+          evt.name.toLowerCase().includes(q) ||
+          evt._embedded?.venues?.[0]?.city?.name?.toLowerCase().includes(q) ||
+          evt.classifications?.[0]?.genre?.name?.toLowerCase().includes(q)
+      );
+    }
+
+    if (classificationName && classificationName !== 'All') {
+      filtered = filtered.filter(
+        (evt) =>
+          evt.classifications?.[0]?.segment?.name?.toLowerCase() ===
+          classificationName.toLowerCase()
+      );
+    }
+
+    return {
+      events: filtered,
+      isDemoData: true,
+      totalElements: filtered.length
+    };
+  }
+
+  // Live API call
+  const params = new URLSearchParams({
+    apikey: API_KEY,
+    size: String(size),
+    sort: sort
+  });
+
+  if (keyword && keyword.trim()) {
+    params.append('keyword', keyword.trim());
+  }
+
+  if (classificationName && classificationName !== 'All') {
+    params.append('classificationName', classificationName);
+  }
+
+  const url = `${BASE_URL}/events.json?${params.toString()}`;
+
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Ticketmaster API request failed with status ${response.status}`);
+  }
+
+  const data = await response.json();
+  const events = data._embedded?.events || [];
+
+  return {
+    events,
+    isDemoData: false,
+    page: data.page,
+    totalElements: data.page?.totalElements || events.length
+  };
+}
+
+/**
+ * Fetch a single event's details by its ID
+ */
+export async function getTicketmasterEventById(eventId) {
+  // Check if it's one of our fallback events or no API key is provided
+  if (!API_KEY || API_KEY.trim() === '' || API_KEY === 'your_ticketmaster_api_key_here' || eventId.startsWith('mock-')) {
+    const mock = MOCK_EVENTS.find((e) => e.id === eventId);
+    if (mock) {
+      return { event: mock, isDemoData: true };
+    }
+  }
+
+  if (!API_KEY) {
+    throw new Error('Event not found.');
+  }
+
+  const url = `${BASE_URL}/events/${eventId}.json?apikey=${API_KEY}`;
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    // If not found in live API, check fallback
+    const fallback = MOCK_EVENTS.find((e) => e.id === eventId);
+    if (fallback) {
+      return { event: fallback, isDemoData: true };
+    }
+    throw new Error(`Failed to fetch event details (Status ${response.status})`);
+  }
+
+  const event = await response.json();
+  return { event, isDemoData: false };
+}
