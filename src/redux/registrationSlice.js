@@ -67,46 +67,6 @@ export const registrationSlice = createSlice({
       state.error = null;
     },
 
-    cancelRegistration: (state, action) => {
-      const { userId, eventId } = action.payload;
-
-      const previousLength = state.registrations.length;
-      state.registrations = state.registrations.filter(
-        (reg) => !(reg.userId === userId && reg.eventId === eventId)
-      );
-
-      if (state.registrations.length < previousLength) {
-        localStorage.setItem('eventhub_registrations', JSON.stringify(state.registrations));
-        state.statusMessage = 'Your registration has been cancelled.';
-        state.error = null;
-      }
-    },
-
-    clearRegistrationMessages: (state) => {
-      state.statusMessage = null;
-      state.error = null;
-    }
-  }
-});
-
-export const {
-  registerForEvent,
-  cancelRegistration,
-  clearRegistrationMessages
-} = registrationSlice.actions;
-
-// Selectors
-export const selectAllRegistrations = (state) => state.registrations.registrations;
-
-export const selectUserRegistrations = (state, userId) =>
-  state.registrations.registrations.filter((reg) => reg.userId === userId);
-
-export const selectIsEventRegistered = (state, userId, eventId) => {
-  if (!userId || !eventId) return false;
-  return state.registrations.registrations.some(
-    (reg) => reg.userId === userId && reg.eventId === eventId
-  );
-};
 
 export const selectRegistrationMessage = (state) => state.registrations.statusMessage;
 export const selectRegistrationError = (state) => state.registrations.error;
